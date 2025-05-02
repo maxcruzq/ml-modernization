@@ -37,6 +37,9 @@ def train_and_evaluate(X, y, n_neighbors, cv_folds=5):
     mean_acc = np.mean(scores)
     std_acc = np.std(scores)
 
+    # Entrenar explicitamente el modelo sobre todos los datos antes de loggear
+    model.fit(X, y)
+
     return model, mean_acc, std_acc
 
 
