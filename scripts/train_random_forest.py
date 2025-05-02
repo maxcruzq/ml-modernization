@@ -33,6 +33,9 @@ with mlflow.start_run(run_name="RandomForest"):
     mlflow.log_param("n_estimators", n_estimators)
     mlflow.log_metric("mean_accuracy", mean_acc)
     mlflow.log_metric("std_accuracy", std_acc)
+
+    # Entrenar explicitamente antes de loggear
+    model.fit(X, y)
     mlflow.sklearn.log_model(model, "model_artifact")
 
     print(
