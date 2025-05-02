@@ -4,9 +4,10 @@
 import mlflow
 import mlflow.sklearn
 from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+import numpy as np
 
 
 def load_data():
@@ -24,47 +25,44 @@ def split_data(X, y, test_size=0.3, random_state=42):
     return train_test_split(X, y, test_size=test_size, random_state=random_state)
 
 
-def train_and_evaluate(X_train, X_test, y_train, y_test, n_neighbors):
+def train_and_evaluate(X, y, n_neighbors, cv_folds=5):
     """
-    Entrena el modelo KNN y calcula accuracy
+    Entrena el modelo KNN usando K-Fold Cross-Validation
     """
     model = KNeighborsClassifier(n_neighbors=n_neighbors)
-    model.fit(X_train, y_train)
-    predictions = model.predict(X_test)
-    acc = accuracy_score(y_test, predictions)
-    return model, acc
+
+    # Realizamos Cross-Validation
+    scores = cross_val_score(model, X, y, cv=cv_folds, scoring='accuracy')
+
+    mean_acc = np.mean(scores)
+    std_acc = np.std(scores)
+
+    return model, mean_acc, std_acc
 
 
 def main():
     # Configuramos el nombre del experimento
-    mlflow.set_experiment("Iris_KNN_AutoTest")
+    mlflow.set_experiment("Iris_KNN_AutoTest_CV")
 
     # Cargamos y preparamos los datos
     X, y = load_data()
-    X_train, X_test, y_train, y_test = split_data(X, y)
 
     # Recorremos valores de n_neighbors de 1 a 30
     for k in range(1, 31):
         with mlflow.start_run():
-            mlflow.set_tag("phase", "diagnostic_test")
+            mlflow.set_tag("phase", "cross_validation_test")
 
             # Entrenamos y evaluamos el modelo
-            model, acc = train_and_evaluate(
-                X_train, X_test, y_train, y_test, n_neighbors=k)
-
-            # BLOQUE DE DIAGNOSTICO
-            predictions = model.predict(X_test)
-            print(f"Run con k = {k}")
-            print(f"Test set classes: {set(y_test)}")
-            print(f"Predicciones únicas: {set(predictions)}")
-            print(f"Cantidad muestras test: {len(y_test)}\n")
+            model, mean_acc, std_acc = train_and_evaluate(X, y, n_neighbors=k)
 
             # Loggeamos los resultados en MLflow
             mlflow.log_param("n_neighbors", k)
-            mlflow.log_metric("accuracy", acc)
+            mlflow.log_metric("mean_accuracy", mean_acc)
+            mlflow.log_metric("std_accuracy", std_acc)
             mlflow.sklearn.log_model(model, "knn_model")
 
-            print(f"Run completado: n_neighbors = {k}, accuracy = {acc}")
+            print(
+                f"Run completado: n_neighbors = {k}, mean_acc = {mean_acc}, std_acc= {std_acc}")
 
 
 if __name__ == "__main__":
