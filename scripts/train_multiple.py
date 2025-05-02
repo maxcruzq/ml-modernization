@@ -59,7 +59,7 @@ def main():
             mlflow.log_param("n_neighbors", k)
             mlflow.log_metric("mean_accuracy", mean_acc)
             mlflow.log_metric("std_accuracy", std_acc)
-            mlflow.sklearn.log_model(model, "knn_model")
+            mlflow.sklearn.log_model(model, "model_artifact")
 
             print(
                 f"Run completado: n_neighbors = {k}, mean_acc = {mean_acc}, std_acc= {std_acc}")
