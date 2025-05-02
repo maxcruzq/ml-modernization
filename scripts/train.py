@@ -50,7 +50,7 @@ def main():
     X_train, X_test, y_train, y_test = split_data(X, y)
 
     # Definimos el parametro a experimentar
-    n_neighbors = 3
+    n_neighbors = 6
 
     # Asignar nombre el experimento que creamremos en MLflow
     mlflow.set_experiment("Iris_KNN_SingleRun")
@@ -65,7 +65,7 @@ def main():
         # Loggeamos en MLflow
         mlflow.log_param("n_neighbors", n_neighbors)
         mlflow.log_metric("accuracy", accuracy)
-        mlflow.sklearn.log_model(model, "knn_model")
+        mlflow.sklearn.log_model(model, "model_artifact")
 
         print(
             f"Modelo entrenado con n_neighbors = {n_neighbors}, precision = {accuracy}")
