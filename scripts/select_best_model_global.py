@@ -1,8 +1,10 @@
 # scripts/select_best_model_global.py
 
 # Importar librerias necesarias
+import json
 import mlflow
 import pandas as pd
+import json
 
 # Lista de experimentos a comparar
 experiment_names = [
@@ -69,11 +71,15 @@ print(f"Desde experimento: {best_overall['experiment_name']}")
 print(f"mean_accuracy: {best_overall['metrics.mean_accuracy']}")
 print(f"std_accuracy: {best_overall['metrics.std_accuracy']}")
 
-# Paso 4: Registrar en el Model Registry
-model_name = "BestIrisModel"
-model_uri = f"runs:/{best_overall['run_id']}/model_artifact"
+# Paso 4: Generar archivo JSON con info del mejor modelo
+output_data = {
+    "run_id": best_overall['run_id'],
+    "artifact_path": "model_artifact",
+    "model_name": "BestIrisModel"
+}
 
-# Crear o actualizar registro
-mlflow.register_model(model_uri, model_name)
-print(
-    f"\nModelo registrado en el Model Registry como '{model_name}'. Revisa MLflow UI para ver su estado.")
+with open("best_model_info.json", "w") as f:
+    json.dump(output_data, f, indent=4)
+
+print("\nArchivo 'best_model_info.json' generado con exito.")
+print("Contiene: run_id, artifact_path, model_name del mejor modelo global")
