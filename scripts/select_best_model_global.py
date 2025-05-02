@@ -35,12 +35,14 @@ for exp_name in experiment_names:
         runs['params.n_neighbors'] = runs['params.n_neighbors'].astype(int)
         sort_cols = ['metrics.mean_accuracy',
                      'metrics.std_accuracy', 'params.n_neighbors']
+        ascending = [False, True, True]
     else:
         sort_cols = ['metrics.mean_accuracy', 'metrics.std_accuracy']
+        ascending = [False, True]
 
     runs_sorted = runs.sort_values(
         by=sort_cols,
-        ascending=[False, True, True]
+        ascending=ascending
     )
 
     # Seleccionar el mejor run (primera fila)
