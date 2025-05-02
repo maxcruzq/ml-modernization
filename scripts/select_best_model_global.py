@@ -46,7 +46,7 @@ for exp_name in experiment_names:
     )
 
     # Seleccionar el mejor run (primera fila)
-    best_run = runs_sorted.iloc[0]
+    best_run = runs_sorted.iloc[0].copy()  # hacemos una copia segura
     best_run['experiment_name'] = exp_name
     best_runs.append(best_run)
 
