@@ -46,9 +46,18 @@ def main():
     # Recorremos valores de n_neighbors de 1 a 30
     for k in range(1, 31):
         with mlflow.start_run():
+            mlflow.set_tag("phase", "diagnostic_test")
+
             # Entrenamos y evaluamos el modelo
             model, acc = train_and_evaluate(
                 X_train, X_test, y_train, y_test, n_neighbors=k)
+
+            # BLOQUE DE DIAGNOSTICO
+            predictions = model.predict(X_test)
+            print(f"Run con k = {k}")
+            print(f"Test set classes: {set(y_test)}")
+            print(f"Predicciones únicas: {set(predictions)}")
+            print(f"Cantidad muestras test: {len(y_test)}\n")
 
             # Loggeamos los resultados en MLflow
             mlflow.log_param("n_neighbors", k)
