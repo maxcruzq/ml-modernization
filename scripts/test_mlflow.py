@@ -4,11 +4,20 @@ import requests
 # Importamos la librería json para convertir datos Python a formato JSON
 import json
 
-# Definimos la URL del servidor MLflow donde está corriendo el modelo
-# Este es el endpoint local que levantaste con mlflow models serve
-url = "http://127.0.0.1:1234/invocations"
+# Importamos os para leer variables de entorno
+import os
 
-# Preparamos los datos de entrada en formato compatible con el modelo MLflow
+# Paso 1: Definimos la URL del servidor MLflow
+# Si existe la variable de entorno MLFLOW_HOST, la usamos; si no, usamos "mlflow-model" (Docker Compose default)
+mlflow_host = os.getenv("MLFLOW_HOST", "mlflow-model")
+url = f"http://{mlflow_host}:1234/invocations"
+
+# Nota:
+# Si vas a correr esto localmente (sin Docker Compose), puedes definir:
+# export MLFLOW_HOST=127.0.0.1
+# antes de ejecutar el script, y tomará ese valor automáticamente.
+
+# Paso 2: Preparamos los datos de entrada en formato compatible con el modelo MLflow
 # Usamos el formato "dataframe_split" que espera columnas y datos por separado
 data = {
     "dataframe_split": {
@@ -20,15 +29,15 @@ data = {
     }
 }
 
-# Definimos los headers (cabeceras) de la solicitud
+# Paso 3: Definimos los headers (cabeceras) de la solicitud
 # Indicamos que estamos enviando datos en formato JSON
 headers = {"Content-Type": "application/json"}
 
-# Hacemos una solicitud POST al endpoint del modelo
+# Paso 4: Hacemos una solicitud POST al endpoint del modelo
 # Enviamos los datos serializados como JSON usando json.dumps
 response = requests.post(url, headers=headers, data=json.dumps(data))
 
-# Verificamos si la respuesta fue exitosa (código HTTP 200)
+# Paso 5: Verificamos si la respuesta fue exitosa (código HTTP 200)
 if response.status_code == 200:
     # Si todo salió bien, imprimimos las predicciones recibidas desde el modelo
     print("Predicciones del modelo:")
