@@ -14,14 +14,27 @@ services:
     networks:
       - mlflow-net
 
-  mlflow-tester:
-    # Servicio que ejecuta el script de prueba automaticamente
+  mlflow-tester-single:
+    # Servicio que ejecuta el script test_mlflow.py (single predictions)
     build:
       context: .
-      dockerfile: Dockerfile-tester
-    container_name: mlflow-tester
+      dockerfile: Dockerfile-tester-single
+    container_name: mlflow-tester-single
     depends_on:
       - mlflow-model # Asegura que el modelo se levante primero
+    environment:
+      - MLFLOW_HOST=mlflow-model
+    networks:
+      - mlflow-net
+    
+  mlflow-tester-batch:
+    # Servicio que ejecuta el script test_mlflow_batch.py (batch predictions)
+    build:
+      context: .
+      dockerfile: Dockerfile-tester-batch
+    container_name: mlflow-tester-batch
+    depends_on:
+      - mlflow-model
     environment:
       - MLFLOW_HOST=mlflow-model
     networks:
