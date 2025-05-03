@@ -4,6 +4,7 @@
 import requests
 import pandas as pd
 import json
+import os
 
 # Paso 1: Cargar los datos batch desde un archivo CSV
 
@@ -27,8 +28,16 @@ data_json = json.dumps({
 
 # Paso 3: Configurar la URL del endpoint de MLflow
 
-# Nos conectamos al servior local levantando el puerto 1234
-url = "http://127.0.0.1:1234/invocations"
+# Usamos una variable de entorno para mayor flexibilidad:
+# Si existe la variable MLFLOW_HOST, la usamos; si no, usamos "mlflow-model" (default para Docker Compose)
+mlflow_host = os.getenv("MLFLOW_HOST", "mlflow-model")
+url = f"http://{mlflow_host}:1234/invocations"
+
+# Nota:
+# Para ejecutar este script fuera de Docker, por ejemplo, localmente contra tu servidor en localhost,
+# antes de correr el script debes exportar la variable de entorno en tu terminal:
+# export MLFLOW_HOST=127.0.0.1
+# y el script usara automaticamente ese valor
 
 # Paso 4: Enviar solicitud POST con el batch completo
 
