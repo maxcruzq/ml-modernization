@@ -21,7 +21,9 @@ print(df.head())
 
 # MLflow espera un JSON con la clave "dataframe_split"
 # que tiene las columnas y los datos separados
-data_json = df.to_json(orient="split")
+data_json = json.dumps({
+    "dataframe_split": json.loads(df.to_json(orient="split"))
+})
 
 # Paso 3: Configurar la URL del endpoint de MLflow
 
