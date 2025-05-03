@@ -1,0 +1,33 @@
+# Usando la version 3.8 del esquema de Docker Compose
+# Esto no es la version de Docker, sino del formato de docker-compose.yml
+version: '3.8'
+
+services:
+  mlflow-model:
+    # Servicio que expone el modelo MLflow
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mlflow-model
+    ports:
+      - "1234:1234"
+    networks:
+      - mlflow-net
+
+  mlflow-tester:
+    # Servicio que ejecuta el script de prueba automaticamente
+    build:
+      context: .
+      dockerfile: Dockerfile-tester
+    container_name: mlflow-tester
+    depends_on:
+      - mlflow-model # Asegura que el modelo se levante primero
+    environment:
+      - MLFLOW_HOST=mlflow-model
+    networks:
+      - mlflow-net
+
+# Red interna que permite que los servicios se comuniquen por nombre
+networks:
+  mlflow-net:
+    driver: bridge
