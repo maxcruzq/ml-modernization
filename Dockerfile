@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 1234
 
 # Comando por defecto: levanta MLflow sirviendo el modelo localmente
-CMD ["mlflow", "models", "serve", "-m", "model_artifact","models:/BestIrisModel/Production", "--no-conda", "-h", "0.0.0.0", "-p", "1234"]
+CMD ["mlflow", "models", "serve", "-m", "model_artifact", "--no-conda", "-h", "0.0.0.0", "-p", "1234"]
