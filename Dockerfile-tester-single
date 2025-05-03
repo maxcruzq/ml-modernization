@@ -14,5 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Comando por defecto:
-# Ejecuta automaticamente el script test_mlflow.py
-CMD ["python", "scripts/test_mlflow.py"]
+# Espera 10 segundos para dar tiempo a que el modelo se levante
+# Luego ejecuta el script test_mlflow.py
+CMD sleep 10 && python scripts/test_mlflow.py
