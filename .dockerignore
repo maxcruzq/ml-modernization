@@ -1,0 +1,23 @@
+# Ignorar carpetas de entorno virtual
+venv/
+.env/
+
+# Ignorar sistema de control de versiones
+.git/
+.gitignore
+
+# Ignorar archivos temporales de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de logs y salida
+*.log
+
+# Ignorar archivos de configuracion local
+*.env
