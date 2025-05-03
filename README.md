@@ -129,7 +129,21 @@ python scripts/train.py
 mlflow models serve -m models:/BestIrisModel/Production -p 1234
 ```
 
-### f. Ejecutar pruebas manuales
+### f. Levantar la interfaz web de MLflow localmente (usando Docker Compose)
+
+Accede a la UI de MLflow en tu navegador en:  
+**http://localhost:5050**
+
+Esto porque en el `docker-compose.yaml` hemos mapeado el puerto externo 5050 al puerto interno 5000 del contenedor:
+
+```yaml
+ports:
+  - "5050:5000"
+```
+
+Así, el contenedor escucha en su puerto 5000, pero tu máquina accede por el 5050.
+
+### g. Ejecutar pruebas manuales
 
 ```bash
 python scripts/test_mlflow.py
@@ -147,7 +161,8 @@ docker-compose up --build
 ```
 
 Esto:
-- Levanta el contenedor `mlflow-model` que sirve el modelo como API REST.
+- Levanta el contenedor `mlflow-model` que sirve el modelo como API REST en el puerto 1234.
+- Levanta el contenedor `mlflow-ui` para acceder a la interfaz gráfica de MLflow en el puerto 5000 (http://localhost:5050).
 - Corre automáticamente los testers `mlflow-tester-single` y `mlflow-tester-batch` (incluyen espera de 10 segundos para asegurar que el modelo esté disponible).
 
 ### b. Ver resultados en consola
@@ -187,3 +202,4 @@ Este proyecto es completamente reproducible en cualquier entorno con Docker, per
 - Despliegue de modelos como servicio REST.
 - Validación automatizada vía scripts.
 - Orquestación robusta usando Docker Compose.
+Además, el entorno incluye la interfaz web de MLflow para explorar los experimentos, métricas, artefactos y modelos directamente desde el navegador.
