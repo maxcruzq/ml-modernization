@@ -22,7 +22,7 @@ services:
     volumes:
       - .:/app # Monta proyecto local al contenedor
     ports:
-      - "5000:5000"
+      - "5050:5000" # Cambio de puerto externo a 5050 para evitar conflicto
     networks:
       - mlflow-net
     command: >
