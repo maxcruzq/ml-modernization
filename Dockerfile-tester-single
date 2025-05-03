@@ -1,0 +1,18 @@
+# Usa una imagen base oficial de Python
+FROM python:3.9-slim
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copia el archivo de dependencias al contenedor
+COPY requirements.txt .
+
+# Instala las dependencias necesarias
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia todo el contenido del proyecto al contenedor
+COPY . .
+
+# Comando por defecto:
+# Ejecuta automaticamente el script test_mlflow.py
+CMD ["python", "scripts/test_mlflow.py"]
